@@ -1,0 +1,38 @@
+﻿using Contacts.Application.Contexts;
+using Contacts.Domain.Contacts.Models;
+using Contacts.Domain.Contacts.Repositories;
+using Contacts.Infrastructure.Repositories;
+
+namespace Contacts.Application.Contacts.Repositories;
+public class ContactRepository(AppDbContext context) : RepositoryBase<Contact>(context), IContactRepository
+{
+    public bool ContactNameAlreadyExists(string contactName, Guid ignoreGuid = default)
+    {
+        var query = Query().Where(r => r.Name == contactName);
+
+        if (ignoreGuid != default)
+            query = query.Where(r => r.Id != ignoreGuid);
+
+        return query.Any();
+    }
+
+    public bool ContactPhoneAlreadyExists(string contactPhoneDDD, string contactPhoneNumber, Guid ignoreGuid = default)
+    {
+        var query = Query().Where(r => r.Phone.DDD == contactPhoneDDD && r.Phone.Number == contactPhoneNumber);
+
+        if (ignoreGuid != default)
+            query = query.Where(r => r.Id != ignoreGuid);
+
+        return query.Any();
+    }
+
+    public bool ContactEmailAlreadyExists(string contactEmailAddress, Guid ignoreGuid = default)
+    {
+        var query = Query().Where(r => r.Email.Address == contactEmailAddress);
+
+        if (ignoreGuid != default)
+            query = query.Where(r => r.Id != ignoreGuid);
+
+        return query.Any();
+    }
+}
