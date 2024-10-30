@@ -6,21 +6,22 @@ namespace Contacts.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ContactsController : ControllerBase
+    public class ContactController : ControllerBase
     {
-        private readonly IContactService contactService;
+        private readonly IContactService _contactService;
 
-        public ContactsController(IContactService contactService)
+        public ContactController(IContactService contactService)
         {
-            this.contactService = contactService;
+            this._contactService = contactService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> List()
+        public ActionResult<IList<ContactVO>> List()
         {
             try
             {
-                return Ok(contactService.List());
+                var result = _contactService.List();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -29,11 +30,12 @@ namespace Contacts.Api.Controllers
         }
 
         [HttpGet("ByDDD/{ddd}")]
-        public async Task<IActionResult> ListByDDD(string ddd)
+        public ActionResult<IList<ContactVO>> ListByDDD(string ddd)
         {
             try
             {
-                return Ok(contactService.ListByDDD(ddd));
+                var result = _contactService.ListByDDD(ddd);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -42,11 +44,11 @@ namespace Contacts.Api.Controllers
         }
 
         [HttpPost()]
-        public async Task<IActionResult> Create(ContactVO contact)
+        public IActionResult Create(ContactVO contact)
         {
             try
             {
-                contactService.Create(contact);
+                _contactService.Create(contact);
                 return NoContent();
             }
             catch (Exception ex)
@@ -56,11 +58,11 @@ namespace Contacts.Api.Controllers
         }
 
         [HttpPut()]
-        public async Task<IActionResult> Update(ContactVO contact)
+        public IActionResult Update(ContactVO contact)
         {
             try
             {
-                contactService.Update(contact);
+                _contactService.Update(contact);
                 return NoContent();
             }
             catch (Exception ex)
@@ -70,11 +72,11 @@ namespace Contacts.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public IActionResult Delete(Guid id)
         {
             try
             {
-                contactService.Delete(id);
+                _contactService.Delete(id);
                 return NoContent();
             }
             catch (Exception ex)

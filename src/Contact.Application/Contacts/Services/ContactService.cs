@@ -7,9 +7,14 @@ using System.Text.RegularExpressions;
 
 namespace Contacts.Application.Contacts.Services;
 
-public class ContactService(IContactRepository repository) 
-    : ServiceBase<Contact, IContactRepository>(repository), IContactService
+public class ContactService
+    : ServiceBase<Contact, IContactRepository>, IContactService
 {
+    public ContactService(IContactRepository repository)
+        : base(repository)
+    {
+    }
+
     public IList<ContactVO> List()
     {
         return Repository.Query(tracking: false)
@@ -98,7 +103,7 @@ public class ContactService(IContactRepository repository)
             throw new ArgumentException("Email already in use!");
     }
 
-    private bool ValidatePhoneDDD(string phoneDDD)
+    private static bool ValidatePhoneDDD(string phoneDDD)
     {
         var validDDDs = new List<string>()
         {
@@ -118,7 +123,7 @@ public class ContactService(IContactRepository repository)
         return validDDDs.Contains(phoneDDD);
     }
 
-    private bool ValidatePhoneNumber(string phoneNumber)
+    private static bool ValidatePhoneNumber(string phoneNumber)
     {
         string mobilePhonePattern = @"^9\d{8}$";
         string fixedPhonePattern = @"^[2-5]\d{7}$";
@@ -126,7 +131,7 @@ public class ContactService(IContactRepository repository)
         return Regex.IsMatch(phoneNumber, mobilePhonePattern) || Regex.IsMatch(phoneNumber, fixedPhonePattern);
     }
 
-    private bool ValidateEmailAddress(string emailAddress)
+    private static bool ValidateEmailAddress(string emailAddress)
     {
         string emailPattern = @"^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$";
         return Regex.IsMatch(emailAddress, emailPattern);

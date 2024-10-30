@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 
 namespace Contacts.Application.Contexts;
-public class DbContextFactory
+public static class DbContextFactory
 {
     public static AppDbContext CreateDbContext(IConfiguration configuration)
     {

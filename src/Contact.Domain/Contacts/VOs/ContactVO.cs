@@ -28,13 +28,13 @@ public class ContactVO
 
     public static Contact Cast(ContactVO vo, Contact entity = null)
     {
-        if (vo.Id == default)
+        if (vo.Id == Guid.Empty)
             entity = new Contact();
 
         if (entity == null)
             throw new ArgumentException("Entry not found!");
 
-        if (vo.Id != default)
+        if (vo.Id != Guid.Empty)
         {
             var hasChanged = false;
             hasChanged |= entity.Name != vo.Name;

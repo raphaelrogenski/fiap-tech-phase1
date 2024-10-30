@@ -24,7 +24,7 @@ public class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
 
     public TEntity GetById(Guid id, bool tracking = false)
     {
-        if (id == default)
+        if (id == Guid.Empty)
             throw new ArgumentException($"Id shouldn't be empty!");
 
         return Query(tracking).SingleOrDefault(r => r.Id == id);
@@ -32,32 +32,27 @@ public class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
 
     public void Create(TEntity entity)
     {
-        if (entity.Id != default)
-            throw new ArgumentException($"Id should be empty!");
-
         // Generate values for ID and CreationAt
         entity.Id = Guid.NewGuid();
         entity.CreatedAt = DateTime.Now;
 
-        _dbSet.AddAsync(entity);
+        _dbSet.Add(entity);
         _context.SaveChanges();
+
+        _context.Entry(entity).State = EntityState.Detached;
     }
 
     public void Update(TEntity entity)
     {
-        if (entity.Id == default)
-            throw new ArgumentException($"Id shouldn't be empty!");
-
         _dbSet.Update(entity);
         _context.SaveChanges();
+
+        _context.Entry(entity).State = EntityState.Detached;
     }
 
     public void Delete(Guid id)
     {
         var entity = GetById(id, tracking: true);
-        if (entity == null)
-            throw new ArgumentException($"Id {id.ToString()} doesn't exists!");
-
         _dbSet.Remove(entity);
         _context.SaveChanges();
     }
