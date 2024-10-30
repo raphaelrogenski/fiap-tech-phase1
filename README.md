@@ -1,5 +1,5 @@
 # TechChallenge-PhaseOne
-PÓS TECH FIAP - Projeto Fase 1 - GRUPO 60
+PÓS TECH FIAP - Projeto Fase 1 - GRUPO 60 
 
 # Running SQL Server on Docker
 Run the following command:
